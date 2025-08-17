@@ -1,0 +1,196 @@
+{
+  "active": false,
+  "connections": {
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2025-08-12T11:38:49.995Z",
+  "id": "5nI23efAdfikNqY5",
+  "isArchived": false,
+  "meta": null,
+  "name": "Generate",
+  "nodes": [
+    {
+      "type": "n8n-nodes-base.googleDocs",
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "document",
+        "operation": "create",
+        "driveId": "=myDrive",
+        "folderId": "=1YJGZFo-HeWC8bU8ymRhsWBw4dZnqqAU_",
+        "title": "={{ $('Code').item.json.title }}.txt"
+      },
+      "typeVersion": 2,
+      "position": [
+        192,
+        240
+      ],
+      "id": "bf51bcf9-df77-4089-a472-ac32f79ed4d2",
+      "name": "Create a document",
+      "disabled": false,
+      "issues": {},
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "ro7fV1GEK53JvHwi",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "type": "n8n-nodes-base.googleDocs",
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "document",
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "simple": true,
+        "actionsUi": {
+          "actionFields": [
+            {
+              "object": "text",
+              "action": "insert",
+              "insertSegment": "body",
+              "locationChoice": "endOfSegmentLocation",
+              "text": "=##title\n{{ $('Code').item.json.title }}\n\n##feeling\n{{ $('Code').item.json.feeling }}\n\n##ryrics\n{{ $('Code').item.json.lyrics }}"
+            }
+          ]
+        },
+        "updateFields": {}
+      },
+      "typeVersion": 2,
+      "position": [
+        400,
+        240
+      ],
+      "id": "87f34916-0603-44b9-bb1c-821e2c2a45f9",
+      "name": "Update a document",
+      "disabled": false,
+      "issues": {},
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "ro7fV1GEK53JvHwi",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.list[$itemIndex].title }}\n주제로 노래를 만들어줘\n가사는 3분정도 분량이면 될것같아.\n결과는 아래 필드들이 반드시 포함시켜줘\n{ title , lyrics, feeling }\n\n1. 제목 \n2. 가사 \n3. 노래의 전체적인 느낌\n4. 스토리\n{{ $json.list[$itemIndex].content }}\n5. 아래는 작성 예시\n  (Verse 1)\n  가을이 오면 가슴이 슬퍼지고,\n  그리움 찻잔 위에 살포시 앉네~\n  별빛 속 잠든 사연이 깨어나고~\n  조용히 내 마음을 적시고 있네~ \n  슬픔을 안고 흐르는 이 계절~\n  이별을 부르는 노래만이 남았네~\n  (Chorus)\n  가을아, 가을아, 눈물 같은 계절아~~\n  바람도 별빛도 너를 데려가려 하네~~~\n  어두운 이 밤에도 난 외롭지 않아~\n  가을아, 가을아, 넌 내 사랑이야~~~\n  (Verse 2)\n  가을빛 짙게 깔리우는 거리엔,\n  식지 않은 찻잔에 노을이 담기네~\n  홀로 된 밤도 그리움은 피어나고~\n  살며시 내 마음을 열어주고 있네~\n  바람 타고 흐르는 추억의 길~\n  그리움의 계절이 또 깊어지네~\n  (Chorus)\n  가을아, 가을아, 눈물 같은 계절아~~\n  바람도 별빛도 너를 데려가려 하네~~~\n  어두운 이 밤에도 난 외롭지 않아~\n  가을아, 가을아, 넌 내 사랑이야~~~\n  (Bridge)\n  기러기 울음 따라 멀리 가도~\n  달빛이 내 발길을 비춰주네~~\n  눈물로 물든 밤도 지나가면~~ \n  가을은 내 맘속에 다시 피어나\n  (Outro)\n  가을아, 가을아, 너를 기다릴게~\n  사연도 추억도 함께 머물러줘 ~~\n  가슴에 스며드는 사랑 같은 계절~\n  가을아, 가을아, 넌 내 운명이야~\n",
+              "role": "user"
+            }
+          ]
+        },
+        "simplify": true,
+        "jsonOutput": true,
+        "options": {
+          "systemMessage": "당신은 멋진 작곡가입니다. "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        112,
+        32
+      ],
+      "id": "a532d0e7-73d0-4537-ac70-6dcf177d03ea",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "QAVCmabpqjifDbq5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "issues": {}
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\n\nconst r = JSON.parse($input.first().json.content.parts[0].text);\nconst lyrics = r.lyrics;\nconst feeling = r.feeling;\n\nreturn {\n  title : r.title,\n  lyrics : lyrics,\n  feeling: feeling\n};",
+        "notice": ""
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        32
+      ],
+      "id": "148de6eb-faab-4bd8-9e1a-e05fa366f0b7",
+      "name": "Code"
+    },
+    {
+      "id": "530d0b57-ae33-4cfe-97f8-9e6ee8c2721a",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -96,
+        32
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      }
+    }
+  ],
+  "origin": "n8n",
+  "pinData": null,
+  "repo": {
+    "owner": "zaruous",
+    "name": "n8n_backup"
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-12T11:38:49.995Z",
+  "versionId": "615446df-1db1-4c6f-b4bc-cf82528ce5bb"
+}
