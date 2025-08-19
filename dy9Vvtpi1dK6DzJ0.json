@@ -1,0 +1,564 @@
+{
+  "active": true,
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "전체 시나리오 작성",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "summary": {
+      "main": [
+        [
+          {
+            "node": "if content is empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "스크립트 요약": {
+      "main": [
+        [
+          {
+            "node": "유튜브 스크립트 작성",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "유튜브 스크립트 작성": {
+      "main": [
+        [
+          {
+            "node": "내용 작성",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "배열로 변환": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "전체 시나리오 작성": {
+      "main": [
+        [
+          {
+            "node": "배열로 변환",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "내용 작성": {
+      "main": [
+        [
+          {
+            "node": "Generate a 커버 이미지",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate a 커버 이미지": {
+      "main": [
+        [
+          {
+            "node": "구글 드라이브 이미지 업로드",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "구글 드라이브 이미지 업로드": {
+      "main": [
+        []
+      ]
+    },
+    "if content is empty": {
+      "main": [
+        [
+          {
+            "node": "전체 시나리오 작성",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "스크립트 요약",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-10T02:25:16.107Z",
+  "id": "dy9Vvtpi1dK6DzJ0",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Music Generation",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "responseMode": "=lastNode"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1296,
+        -96
+      ],
+      "id": "a54fda5f-9f15-4c23-8435-087335fc0428",
+      "name": "When chat message received",
+      "webhookId": "2d277bdf-91bf-4f60-be60-1dc257351441"
+    },
+    {
+      "parameters": {
+        "batchSize": "=1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -128,
+        -16
+      ],
+      "id": "c9fa51a2-3c4e-44e9-94ff-3aea273fbc72",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "=##title\n{{ $('Code').item.json.title }}\n\n##genres\n{{ $('Code').item.json.genres }}\n\n##feeling\n{{ $('Code').item.json.feeling }}\n\n##ryrics\n{{ $('Code').item.json.lyrics }}\n\n\n"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        624,
+        240
+      ],
+      "id": "87f34916-0603-44b9-bb1c-821e2c2a45f9",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "ro7fV1GEK53JvHwi",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "driveId": "=myDrive",
+        "folderId": "=1YJGZFo-HeWC8bU8ymRhsWBw4dZnqqAU_",
+        "title": "={{ $runIndex }}.{{ $('Code').item.json.title }}.txt"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        416,
+        240
+      ],
+      "id": "bf51bcf9-df77-4089-a472-ac32f79ed4d2",
+      "name": "Create a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "ro7fV1GEK53JvHwi",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\n\nconst r = JSON.parse($input.first().json.content.parts[0].text);\nconst lyrics = r.lyrics;\nconst feeling = r.feeling;\nconst genres = r.genres;\n\n\nreturn {\n  title : r.title,\n  lyrics : lyrics,\n  feeling: feeling,\n  genres : genres\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        32
+      ],
+      "id": "148de6eb-faab-4bd8-9e1a-e05fa366f0b7",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.0-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.0-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.title }}\n주제로 노래를 만들어줘, 만든 노래는 두번 더 다음어서 괜찮게 나오게해줘.\n가사는 3분정도 분량이면 될것같아.\n결과는 아래 필드들이 반드시 포함시켜줘\n{ title , lyrics, feeling, genres }\n\n1. 제목 (title)\n2. 가사 (lyrics)\n3. 노래의 전체적인 느낌(felling)\n4. 스토리(Story)\n{{ $json.content }}\n5. 장르(genres)\n( examples : Post-Hardcore, Hard rock, alternative rock, post-grunge, alternative metal, Nu-Metal, Contralto Female Vocals )\n6. 아래는 가사(lyrics) 작성을 위한 예시입니다.\n  (Verse 1)\n  가을이 오면 가슴이 슬퍼지고,\n  그리움 찻잔 위에 살포시 앉네~\n  별빛 속 잠든 사연이 깨어나고~\n  조용히 내 마음을 적시고 있네~ \n  슬픔을 안고 흐르는 이 계절~\n  이별을 부르는 노래만이 남았네~\n  (Chorus)\n  가을아, 가을아, 눈물 같은 계절아~~\n  바람도 별빛도 너를 데려가려 하네~~~\n  어두운 이 밤에도 난 외롭지 않아~\n  가을아, 가을아, 넌 내 사랑이야~~~\n  (Verse 2)\n  가을빛 짙게 깔리우는 거리엔,\n  식지 않은 찻잔에 노을이 담기네~\n  홀로 된 밤도 그리움은 피어나고~\n  살며시 내 마음을 열어주고 있네~\n  바람 타고 흐르는 추억의 길~\n  그리움의 계절이 또 깊어지네~\n  (Chorus)\n  가을아, 가을아, 눈물 같은 계절아~~\n  바람도 별빛도 너를 데려가려 하네~~~\n  어두운 이 밤에도 난 외롭지 않아~\n  가을아, 가을아, 넌 내 사랑이야~~~\n  (Bridge)\n  기러기 울음 따라 멀리 가도~\n  달빛이 내 발길을 비춰주네~~\n  눈물로 물든 밤도 지나가면~~ \n  가을은 내 맘속에 다시 피어나\n  (Outro)\n  가을아, 가을아, 너를 기다릴게~\n  사연도 추억도 함께 머물러줘 ~~\n  가슴에 스며드는 사랑 같은 계절~\n  가을아, 가을아, 넌 내 운명이야~\n"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {
+          "systemMessage": "=당신은 멋진 작곡가입니다. \n\n전체 시나리오 내용에 맞춰 노래를 생성해주세요\n# 전체 시나리오\n{{ $('전체 시나리오 작성').item.json.candidates }}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        336,
+        32
+      ],
+      "id": "a532d0e7-73d0-4537-ac70-6dcf177d03ea",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "QAVCmabpqjifDbq5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = JSON.parse($input.first().json.candidates[0].content.parts[0].text);\n\nlet content = \"\";\nfor(var i=0; i< items.length; i++)\n{\n    content += (i+1) + \".\"  + items[i].title + \"\\n\" + items[i].content + \"\\n\\n\"\n}\n\n\nreturn {\n    content : content\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -592,
+        -480
+      ],
+      "id": "333954b8-1a49-41eb-9102-13621ce85466",
+      "name": "summary"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=내용에 맞는 유튜브 소개 스크립트 작성\n\n#주의사항\n내용을 바로 복사 붙여넣을 수 있도록 불필요한 응답은 없애기.\n\n#내용\n{{ $json.content }}\n\n"
+            }
+          ]
+        },
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        -480
+      ],
+      "id": "7f7e55b7-5beb-453c-98fa-6c39ba85902f",
+      "name": "스크립트 요약",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "QAVCmabpqjifDbq5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "driveId": "=myDrive",
+        "folderId": "=1YJGZFo-HeWC8bU8ymRhsWBw4dZnqqAU_",
+        "title": "=utubescript_{{ $('When chat message received').item.json.chatInput }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        176,
+        -480
+      ],
+      "id": "d342606d-65d1-44c2-a450-20452a1dd389",
+      "name": "유튜브 스크립트 작성",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "ro7fV1GEK53JvHwi",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('summary').item.json.content }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        368,
+        -480
+      ],
+      "id": "31d3908a-4a16-48b7-b518-30e571108adb",
+      "name": "내용 작성",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "ro7fV1GEK53JvHwi",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = JSON.parse($input.first().json.candidates[0].content.parts[0].text);\nreturn items"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        -96
+      ],
+      "id": "6b39a5c2-b7e5-4766-a5a0-d4bf4ffa03e5",
+      "name": "배열로 변환"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.chatInput }} 이란 느낌의 노래 제목에 맞춰\n스토리 노래 제목들을 8개 생성 \n\n결과는 JSON 포멧으로 생성해주고 \n아래 JSON 구조로 만들어줘\n{\ntitle\ncontent\n}\n"
+            }
+          ]
+        },
+        "simplify": false,
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1008,
+        -96
+      ],
+      "id": "ff0432a9-ca53-44e8-a952-342e4ef2d411",
+      "name": "전체 시나리오 작성",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "QAVCmabpqjifDbq5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.0-flash-exp-image-generation",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.0-flash-exp-image-generation"
+        },
+        "prompt": "=당신은 앨범 커버 이미지 제작자입니다.\n3번 노래 내용과 어울리는 앨범 커버 이미지를 만들어주십시요.\n\n!! 중요합니다. 아래 룰을 따라 주세요.\n!! This is important. Please follow the rules below.\n\n1. No text in image.\n2. 노래 내용과 어울리는 애니메이션 이미지를 제작해주시면 됩니다.\n3. 노래 내용\n  {{ $('summary').item.json.content }}\n\n\n\n\n\n",
+        "options": {
+          "sampleCount": 1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        608,
+        -480
+      ],
+      "id": "f7a0e70b-cffd-441f-adfd-5cfbb086ec96",
+      "name": "Generate a 커버 이미지",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "QAVCmabpqjifDbq5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $('When chat message received').item.json.chatInput }}.png",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1YJGZFo-HeWC8bU8ymRhsWBw4dZnqqAU_",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        816,
+        -480
+      ],
+      "id": "88043706-1d26-4422-82fe-73b031acd2e8",
+      "name": "구글 드라이브 이미지 업로드",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "fzGOVp3kB6pQIhuU",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1c45475-39b9-4293-be97-333e42634f76",
+              "leftValue": "={{ $json.content }}",
+              "rightValue": "\"\"",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -368,
+        -480
+      ],
+      "id": "a36372b7-8e4d-4198-b6d0-acd5825d750e",
+      "name": "if content is empty"
+    }
+  ],
+  "origin": "n8n",
+  "pinData": {},
+  "repo": {
+    "owner": "zaruous",
+    "name": "n8n_backup"
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-08-19T14:40:00.000Z",
+  "versionId": "f3b7fe64-68a7-492a-a57e-200cb0333e58"
+}
